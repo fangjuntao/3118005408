@@ -13,11 +13,10 @@ def get_keywords(context1,context2):
     stopwords = [line.strip() for line in open('StopWords.txt',encoding='UTF-8').readlines()]
     stopwords.append("\n")
     # 分词
-    keywords1 = [i for i in jieba.cut(context1, cut_all=True) if(i not in stopwords) and i != '']
-
-    keywords2 = [i for i in jieba.cut(context2, cut_all=True) if(i not in stopwords) and i != '']
-    # 对两个关键词列表进行合并去重(set会去重复元素)
-    word_set = set(keywords1).union(set(keywords2))
+    keywords1 = [i for i in jieba.cut(context1, cut_all=True) if i != '' and i != ' ']
+    keywords2 = [i for i in jieba.cut(context2, cut_all=True) if i != '' and i != ' ']
+    # 对两个关键词列表进行合并去重
+    word_set = set(keywords1).union(set(keywords2)) - set(stopwords)
     return keywords1,keywords2,word_set
 
 
@@ -33,9 +32,16 @@ def get_freq(keywords1,keywords2,word_set):
     k2_cut_freq = [0] * len(word_dict)
 
     for word in keywords1:
-        k1_cut_freq[word_dict[word]] += 1
+        if word in word_dict:
+            k1_cut_freq[word_dict[word]] += 1
     for word in keywords2:
-        k2_cut_freq[word_dict[word]] += 1
+        if word in word_dict:
+            k2_cut_freq[word_dict[word]] += 1
+
+    print("freq1: length")
+    print("{}".format(len(k1_cut_freq)))
+    print("freq2:length")
+    print("{}".format(len(k2_cut_freq)))
 
     return k1_cut_freq,k2_cut_freq
 
@@ -64,7 +70,7 @@ def main():
     args = parser.parse_args()
     # arg1, arg2, arg3 = args.l1, args.l2, args.l3
     arg1  ="E:\\我的资源\\大学课件\\软件工程导论\\作业之论文查重\\test\\orig.txt"
-    arg2  ="E:\\我的资源\\大学课件\\软件工程导论\\作业之论文查重\\test\\orig_0.8_dis_10.txt"
+    arg2  ="E:\\我的资源\\大学课件\\软件工程导论\\作业之论文查重\\031804110-master\\031804110-master\\sim_0.8\\orig_0.8_add.txt"
     arg3  ="E:\\我的资源\\大学课件\\软件工程导论\\作业之论文查重\\test\\answer.txt"
     text1 = open(arg1, 'rb')
     text2 = open(arg2, 'rb')
