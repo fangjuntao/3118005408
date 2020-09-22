@@ -1,0 +1,1 @@
+orig.txt和orig_0.8_del.txt的重复率为:0.07
